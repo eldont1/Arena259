@@ -4,3 +4,4 @@ arena
 main
 Makefile
 test1
+*.exe
