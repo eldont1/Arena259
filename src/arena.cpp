@@ -1,15 +1,33 @@
 #include <iostream>
 #include <iomanip>
 #include "arena.h"
+#include "arenarand.h"
 
-void Arena::battle(Creature &a, Creature &b)
+void Arena::battle(Creature &temp1, Creature &temp2)
 {
+<<<<<<< HEAD
     std::cout << a.getName() << " vs. " << b.getName() << std::endl;
+=======
+
+    Creature* first;
+    Creature* second;
+
+    if (ArenaRand::flipCoin() == 1) {
+        first = &temp1;
+        second = &temp2;
+    } else {
+        first = &temp2;
+        second = &temp1;
+    }
+
+    Creature& a = *first;
+    Creature& b = *second;
+>>>>>>> 46a0b0e228e9fa836e5b433dc5f7380cbffb9ba3
 
     if(!Creature::validateBattle(a, b)){
         return;
     }
-
+	    
     std::cout << "=============================\n";
     std::cout << "        ARENA BATTLE        \n";
     std::cout << "=============================\n";
@@ -20,8 +38,8 @@ void Arena::battle(Creature &a, Creature &b)
 
     while (a.isAlive() && b.isAlive())
     {
-        std::cout << "-----------------------------\n";
-	std::cout << "\nTurn " << turn << std::endl;
+        std::cout << "\n-----------------------------\n";
+	std::cout << "Turn " << turn << std::endl;
 	std::cout << "-----------------------------\n";
 
 
@@ -57,5 +75,5 @@ void Arena::battle(Creature &a, Creature &b)
         std::cout << b.getName() << " defeats " << a.getName() << "!"<< std::endl;
         std::cout << b.getName() << " has " << b.getHealth() << " HP remaining." << std::endl;
     }
-    std::cout << "\n=============================\n";
+    std::cout << "=============================\n";
 }

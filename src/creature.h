@@ -10,6 +10,10 @@ const int MIN_HEALTH = 80;
 const int MAX_HEALTH = 120;
 
 
+const int MIN_HEALTH = 80;
+const int MAX_HEALTH = 120;
+
+
 class Creature
 {
 private:
