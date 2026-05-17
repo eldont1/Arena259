@@ -1,10 +1,10 @@
-#ifndef ARENARAND_H
-#define ARENARAND_H
+#ifndef RNG_H
+#define RNG_H
 
 #include <random>
 
 
-class ArenaRand {
+class RNG {
     public:
         static bool flipCoin(); // flip a coin and get a bool
         static int randomValue(int min, int max); // returns a random int from within the range

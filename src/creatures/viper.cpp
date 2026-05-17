@@ -6,4 +6,5 @@ Creature makeViper()
     int h = 80;
     int d = 20;
     return Creature(n, h, d);
-}
+} 
+

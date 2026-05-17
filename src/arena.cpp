@@ -1,57 +1,88 @@
 #include <iostream>
 #include <iomanip>
 #include "arena.h"
+#include "rng.h"
 
-void Arena::battle(Creature &a, Creature &b)
+void Arena::battle(Creature &temp1, Creature &temp2)
 {
-    std::cout << a.name << " vs. " << b.name << std::endl;
+
+    Creature* first;
+    Creature* second;
+
+    if (RNG::flipCoin() == 1) {
+        first = &temp1;
+        second = &temp2;
+    } else {
+        first = &temp2;
+        second = &temp1;
+    }
+
+    Creature& a = *first;
+    Creature& b = *second;
 
     if(!Creature::validateBattle(a, b)){
         return;
     }
-
-    std::cout << "=============================\n";
-    std::cout << "        ARENA BATTLE        \n";
-    std::cout << "=============================\n";
-
-    std::cout << a.name << " vs " << b.name << std::endl;
+    
+    std::cout << a.getName() << " vs " << b.getName() << std::endl;
 
     int turn = 1;
 
     while (a.isAlive() && b.isAlive())
     {
-        std::cout << "-----------------------------\n";
-	std::cout << "\nTurn " << turn << std::endl;
-	std::cout << "-----------------------------\n";
+        std::cout << "\n-----------------------------\n";
+	    std::cout << "Turn " << turn << std::endl;
+	    std::cout << "-----------------------------\n";
 
 
 	std::cout << std::left
-                  << std::setw(10) << a.name << " HP: " << a.health << "\n"
-                  << std::setw(10) << b.name << " HP: " << b.health << "\n";
+                  << std::setw(10) << a.getName() << " HP: " << a.getHealth() << "\n"
+                  << std::setw(10) << b.getName() << " HP: " << b.getHealth() << "\n";
 
 
-        std::cout << a.name << " with attack power "<< a.damage << " attacks " << b.name << "!" << std::endl;
+        std::cout << a.getName() << " attacks!" << std::endl;
         a.attack(b);
-        std::cout << b.name << " health is: " << b.health << " HP" << std::endl;
+        std::cout << b.getName() << " health: " << b.getHealth() << std::endl;
 
 
-        std::cout << b.name << " with attack power " << b.damage << " attacks " << a.name << "!" << std::endl;
+        std::cout << b.getName() << " attacks!" << std::endl;
         b.attack(a);
-        std::cout << a.name << " health is: " << a.health << " HP" << std::endl;
+        std::cout << a.getName() << " health: " << a.getHealth() << std::endl;
 
         turn++;
     }
 
-    std::cout << "\n=============================\n";
+    // Ezra's custom battle statistics code    
+    // print out battle stats
+    std::cout << std::endl;
+    printStats(a, b, turn);
+}
+
+void Arena::printStats(Creature& a, Creature& b, int turns) {
+
+    // print winner
+    std::cout << "Battle finished, the winner is ";
     if (a.isAlive())
     {
-        std::cout << a.name << " defeats " << b.name << "!" << std::endl;
-        std::cout << a.name << " has " << a.health << " HP remaining." << std::endl;
+        std::cout << a.getName() << "!" << std::endl;
     }
     else
     {
-        std::cout << b.name << " defeats " << a.name << "!"<< std::endl;
-        std::cout << b.name << " has " << b.health << " HP remaining." << std::endl;
+        std::cout << b.getName() << "!" << std::endl;
     }
-    std::cout << "\n=============================\n";
+
+    // arena stats
+    std::cout << "Total turns: " << turns << std::endl;
+    std::cout << "Total Damage Dealt: " << a.getDamageDealt() + b.getDamageDealt() << std::endl;
+    std::cout << std::endl;
+
+    // a creature stats
+    std::cout << a.getName() << " Health: " << a.getHealth() << "/" << a.getStartHealth() << std::endl;
+    std::cout << a.getName() << " Damage Dealt: " << a.getDamageDealt() << std::endl;
+    std::cout << std::endl;
+
+    // b creature stats
+    std::cout << b.getName() << " Health: " << b.getHealth() << "/" << b.getStartHealth() << std::endl;
+    std::cout << b.getName() << " Damage Dealt: " << b.getDamageDealt() << std::endl;
+
 }
