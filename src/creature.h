@@ -4,64 +4,68 @@
 #include <string>
 #include <iostream>
 
-const int MIN_HEALTH = 80;
-const int MAX_HEALTH = 120;
+
+// added getters, setters, private static constants, and made variables protected
+// the getters and setters are just generally better practice, and the private static
+// constants are just so we can have an easily modifying range for valid health and valid damage.
+// also, leaving implementation in .cpp file is better so we don't have to worry what order we implement functions in (we can call methods within methods without worrying about compiler errors)
 
 
 class Creature
 {
+private:
+	static int creatureCount; // will be increased in the constructor
+	static const int MIN_HEALTH = 80; // ranges for valid health and damage
+	static const int MAX_HEALTH = 120;
+	static const int MIN_DAMAGE = 0;
+	static const int MAX_DAMAGE = 20;
+
+	std::string name;
+	int startHealth; // maxmimum health stat
+	int health;
+	int startDamage; // maximum damage stat
+	int damage;
+	int damageDealt = 0;
+	int defense;
+	// the start variables don't get setters, since they don't ever change.
+	// we can't make them const though because they are declare on construction.
+
 public:
-    std::string name;
-    int health;
-    int damage;
+	// Constructor 
+	Creature(std::string name, int health, int damage); 
+	Creature(std::string name, int health, int damage, int defense);
 
-    Creature(std::string n, int h, int d)
-    {
-        name = n;
-        health = h;
-        damage = d;
-    }
+	// Getters
+	std::string getName() const; // returns the name variable
+	int getHealth() const; // returns the health variable
+	int getStartHealth() const;
+	int getDamage() const; // returns the damage variable
+	int getStartDamage() const;
+	int getDamageDealt() const;
+	bool isAlive() const; // checks if the health is >= 0
+	static int getCreatureCount(); // get the total amount of creature instances
+	
+	// Setters
+	void setName(const std::string&); // set name
+	void setHealth(const int&); // set health
+	void setDamage(const int&); // set damage
+	void heal(const int&); // increase health
+	void incDamage(const int&); // increase damage
+	void incDamageDealt(const int&); // increase damage dealt stat
 
-    void attack(Creature &other)
-    {
+	// Damage other creatures
+	virtual void attack(Creature& target); // decreases health of target 
+	void takeDamage(int amount); // decrease this creature's health by amount - defense
+	
+	virtual void specialMove(Creature& other);
 
-        other.health -= damage;
-        if (other.health < 0)
-        {
-            other.health = 0;
-        }
-    }
-
-    bool isAlive()
-    {
-        return health > 0;
-    }
-
-    static bool validate(Creature &c){
-        if(c.health < MIN_HEALTH || c.health > MAX_HEALTH){
-            std::cerr << "Error: " << c.name << " has invalid health. Health must be between " << MIN_HEALTH << " and " << MAX_HEALTH << std::endl;
-            return false;
-        }
-        if(c.damage <= 0 || c.damage > 20){
-            std::cerr << "Error: " << c.name << " has invalid damage. Damage must be > 0 or <= 20" << std::endl;
-            return false;
-        }
-        return true;
-        // minimum health to start a battle is 80, otherwise the battle would be predictable
-        // 
-    }
-
-    /*
-    If Creature a or b does not have the valid stats for health or damage
-    It will output an error message and abort
-    */
-    static bool validateBattle(Creature &a, Creature &b){
-        if(!validate(a) || !validate(b)){
-            std::cerr << "The Battle cannot take place as there are invalid stats" << std::endl;
-            return false;
-        }
-        return true;
-    }
+	// Validation checks
+	static bool validate(Creature&); // returns true if health and damage are in valid
+					 // ranges, false if otherwise (for balancing)
+	static bool validateBattle(Creature&, Creature&); // checks two creatures and makes sure both of them have valid stats, 
+							  // use before starting a battle between the two.
+							  // returns false if either are invalid
+							  // true if both are valid.
 };
 
 #endif
